@@ -47,7 +47,7 @@ html, body {
 /* Frappe v15 structure: body > div.main-section contains everything  */
 div.main-section {
   margin-left: var(--ax-sidebar-width) !important;
-  transition: margin-left var(--ax-transition-slow);
+  transition: margin-left var(--ax-transition-slow), width var(--ax-transition-slow);
   width: calc(100vw - var(--ax-sidebar-width)) !important;
   min-width: 0 !important;
 }
@@ -55,6 +55,19 @@ div.main-section {
 body.ax-sidebar-collapsed div.main-section {
   margin-left: var(--ax-sidebar-collapsed) !important;
   width: calc(100vw - var(--ax-sidebar-collapsed)) !important;
+}
+
+/* ── Shift for SubNav ─────────────────────────────────────────────── */
+/* Default sidebar + SubNav */
+body.ax-has-subnav div.main-section {
+  margin-left: calc(var(--ax-sidebar-width) + var(--ax-subnav-width)) !important;
+  width: calc(100vw - var(--ax-sidebar-width) - var(--ax-subnav-width)) !important;
+}
+
+/* Collapsed sidebar + SubNav */
+body.ax-sidebar-collapsed.ax-has-subnav div.main-section {
+  margin-left: calc(var(--ax-sidebar-collapsed) + var(--ax-subnav-width)) !important;
+  width: calc(100vw - var(--ax-sidebar-collapsed) - var(--ax-subnav-width)) !important;
 }
 
 /* ── STEP 4: Let layout-main-section-wrapper take full width ──────── */

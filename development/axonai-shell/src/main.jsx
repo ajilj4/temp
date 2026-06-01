@@ -29,11 +29,15 @@ window.addEventListener('unhandledrejection', function (e) {
   xhr.send();
 });
 import Sidebar from './components/Sidebar/Sidebar.jsx';
+import SubNav from './components/SubNav/SubNav.jsx';
 import TopHeader from './components/TopHeader/TopHeader.jsx';
+import ModuleNav from './components/ModuleNav/ModuleNav.jsx';
 import './styles/tokens.css';
 import './styles/theme.css';
 import './styles/sidebar.css';
+import './styles/subnav.css';
 import './styles/topbar.css';
+import './styles/modulenav.css';
 
 function mountAxonAI() {
   if (document.getElementById('axonai-sidebar-root')) return;
@@ -52,18 +56,32 @@ function mountAxonAI() {
     </React.StrictMode>
   );
 
-  // 2. Mount TopHeader
+  // 1.5. Mount SubNav
+  const subnavRoot = document.createElement('div');
+  subnavRoot.id = 'axonai-subnav-root';
+  sidebarRoot.after(subnavRoot);
+
+  createRoot(subnavRoot).render(
+    <React.StrictMode>
+      <SubNav />
+    </React.StrictMode>
+  );
+
+  // 2. Mount TopHeader & ModuleNav
   const topbarRoot = document.createElement('div');
   topbarRoot.id = 'axonai-topbar-root';
   mainSection.prepend(topbarRoot);
 
   createRoot(topbarRoot).render(
     <React.StrictMode>
-      <TopHeader />
+      <>
+        <TopHeader />
+        <ModuleNav />
+      </>
     </React.StrictMode>
   );
 
-  console.log('[AxonAI One] React Sidebar and Topbar mounted successfully ✓');
+  console.log('[AxonAI One] React Sidebar, SubNav, Topbar, and ModuleNav mounted successfully ✓');
 }
 
 let _bootAttempts = 0;
