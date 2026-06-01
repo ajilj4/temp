@@ -10,6 +10,14 @@ development/*
 !development/apps-example.json
 !development/vscode-example/
 
+# Un-ignore custom development codebases to track them in the main repository
+!development/axonai-shell/
+!development/frappe-bench/
+development/frappe-bench/*
+!development/frappe-bench/apps/
+development/frappe-bench/apps/*
+!development/frappe-bench/apps/axonai_ui/
+
 # Pycharm
 .idea
 

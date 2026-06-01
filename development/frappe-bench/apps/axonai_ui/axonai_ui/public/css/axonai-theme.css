@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════════════════════
+   axonai-theme.css
+   AxonAI One — Global Design Tokens + Layout Overrides for Frappe v15
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* 1. Google Fonts — Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── AxonAI Design Tokens ─────────────────────────────────────────── */
+:root {
+  --ax-primary:             #4F46E5;
+  --ax-primary-dark:        #3730A3;
+  --ax-primary-light:       #EEF2FF;
+  --ax-sidebar-bg:          #1E2A78;
+  --ax-sidebar-hover:       #2D3F9E;
+  --ax-sidebar-active-bg:   #4F46E5;
+  --ax-sidebar-text:        #CBD5E1;
+  --ax-sidebar-text-active: #FFFFFF;
+  --ax-sidebar-width:       260px;
+  --ax-sidebar-collapsed:   64px;
+  --ax-sidebar-border:      rgba(255, 255, 255, 0.08);
+  --ax-topbar-height:       48px;  /* matches Frappe's default navbar height */
+  --ax-page-bg:             #F8F9FC;
+  --ax-card-bg:             #FFFFFF;
+  --ax-border:              #E5E7EB;
+  --ax-text-primary:        #111827;
+  --ax-text-secondary:      #6B7280;
+  --ax-success:             #10B981;
+  --ax-warning:             #F59E0B;
+  --ax-danger:              #EF4444;
+  --ax-shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
+  --ax-shadow-md:  0 4px 6px -1px rgba(0,0,0,0.07);
+  --ax-radius-sm:   4px;
+  --ax-radius-md:   8px;
+  --ax-radius-lg:   12px;
+  --ax-transition:        200ms ease;
+  --ax-transition-slow:   300ms ease;
+}
+
+/* ── Override Frappe font globally ────────────────────────────────── */
+body, .desk-body, .frappe-app, .navbar,
+input, select, textarea, button, .form-control {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FRAPPE v15 LAYOUT CORRECTIONS
+   
+   Frappe v15 DOM (inside <body>):
+     div.main-section
+       header                     ← Frappe navbar (48px)
+       div#body
+         div.page-container
+           div.page-body
+             div.layout-main.row
+               div.col-lg-2.layout-side-section  ← HIDE THIS
+               div.col.layout-main-section-wrapper ← Main content
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── STEP 1: Prevent horizontal overflow on body ──────────────────── */
+html, body {
+  overflow-x: hidden !important;
+}
+
+/* ── STEP 2: Completely hide Frappe's built-in sidebar ────────────── */
+/* This column would cause content to overflow when our sidebar adds 260px */
+.layout-side-section {
+  display: none !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 0 !important;
+  max-width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ── STEP 3: Shift entire desk content to the right of our sidebar ── */
+/* Frappe v15 structure: body > div.main-section contains everything  */
+div.main-section {
+  margin-left: var(--ax-sidebar-width) !important;
+  transition: margin-left var(--ax-transition-slow);
+  width: calc(100vw - var(--ax-sidebar-width)) !important;
+  min-width: 0 !important;
+}
+
+body.ax-sidebar-collapsed div.main-section {
+  margin-left: var(--ax-sidebar-collapsed) !important;
+  width: calc(100vw - var(--ax-sidebar-collapsed)) !important;
+}
+
+/* ── STEP 4: Let layout-main-section-wrapper take full width ──────── */
+/* Since layout-side-section is hidden, the wrapper should fill the row */
+.layout-main .layout-main-section-wrapper {
+  flex: 1 1 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* ── STEP 5: Prevent row from overflowing due to Bootstrap gutters ── */
+.layout-main.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* ── STEP 6: Page background ──────────────────────────────────────── */
+body {
+  background-color: var(--ax-page-bg) !important;
+}
+
+.page-container {
+  background-color: var(--ax-page-bg) !important;
+}
+
+/* ── STEP 7: Navbar — keep Frappe's navbar but style it ──────────── */
+/* Our sidebar starts at top:0 so navbar is fine sitting above content */
+.navbar.navbar-default {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid var(--ax-border) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+/* ── STEP 8: Smooth scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.22); }
