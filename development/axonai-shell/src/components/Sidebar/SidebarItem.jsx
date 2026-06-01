@@ -9,6 +9,7 @@ export default function SidebarItem({ item, collapsed, isActive, onClick }) {
       onClick={(e) => {
         if (item.url === '#copilot') {
           e.preventDefault();
+          e.stopPropagation();
         }
         if (onClick) onClick(item);
       }}

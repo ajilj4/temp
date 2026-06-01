@@ -32,16 +32,20 @@ import Sidebar from './components/Sidebar/Sidebar.jsx';
 import SubNav from './components/SubNav/SubNav.jsx';
 import TopHeader from './components/TopHeader/TopHeader.jsx';
 import ModuleNav from './components/ModuleNav/ModuleNav.jsx';
+import KeyboardBar from './components/KeyboardBar/KeyboardBar.jsx';
+import CopilotDrawer from './components/AICopilot/CopilotDrawer.jsx';
 import './styles/tokens.css';
 import './styles/theme.css';
 import './styles/sidebar.css';
 import './styles/subnav.css';
 import './styles/topbar.css';
 import './styles/modulenav.css';
+import './styles/keyboard.css';
+import './styles/copilot.css';
 
 function mountAxonAI() {
   if (document.getElementById('axonai-sidebar-root')) return;
-  
+
   const mainSection = document.querySelector('.main-section');
   if (!mainSection) return;
 
@@ -81,7 +85,29 @@ function mountAxonAI() {
     </React.StrictMode>
   );
 
-  console.log('[AxonAI One] React Sidebar, SubNav, Topbar, and ModuleNav mounted successfully ✓');
+  // 3. Mount KeyboardBar (fixed bottom strip)
+  const keybarRoot = document.createElement('div');
+  keybarRoot.id = 'axonai-keybar-root';
+  document.body.appendChild(keybarRoot);
+
+  createRoot(keybarRoot).render(
+    <React.StrictMode>
+      <KeyboardBar />
+    </React.StrictMode>
+  );
+
+  // 4. Mount CopilotDrawer (slide-in from right)
+  const copilotRoot = document.createElement('div');
+  copilotRoot.id = 'axonai-copilot-root';
+  document.body.appendChild(copilotRoot);
+
+  createRoot(copilotRoot).render(
+    <React.StrictMode>
+      <CopilotDrawer />
+    </React.StrictMode>
+  );
+
+  console.log('[AxonAI One] All components mounted: Sidebar, SubNav, Topbar, ModuleNav, KeyboardBar, CopilotDrawer ✓');
 }
 
 let _bootAttempts = 0;
@@ -105,8 +131,8 @@ if (document.readyState === 'loading') {
   _tryReactBoot();
 }
 
-window.addEventListener('load', function() {
-  setTimeout(function() {
+window.addEventListener('load', function () {
+  setTimeout(function () {
     const diagnosticInfo = {
       frappe_defined: typeof window.frappe !== 'undefined',
       boot_defined: typeof window.frappe?.boot !== 'undefined',
@@ -119,9 +145,9 @@ window.addEventListener('load', function() {
       sidebar_element_exists: !!document.getElementById('ax-sidebar'),
       topbar_element_exists: !!document.getElementById('axonai-topbar-root')
     };
-    
+
     console.log('[AxonAI Debug] Running diagnostics:', diagnosticInfo);
-    
+
     var xhr = new XMLHttpRequest();
     var message = 'DIAGNOSTICS:\n' + JSON.stringify(diagnosticInfo, null, 2);
     xhr.open('GET', '/api/method/axonai_ui.log_browser_error?error_message=' + encodeURIComponent(message), true);

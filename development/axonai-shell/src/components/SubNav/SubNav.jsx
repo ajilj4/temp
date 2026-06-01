@@ -1,23 +1,20 @@
 /**
  * SubNav.jsx
- * AxonAI One — Contextual vertical sub-navigation panel
+ * AxonAI One — Contextual Vertical Sub-Navigation Panel (Level 3 Navigation)
  *
- * Appears as a narrow secondary left panel to the right of the main
- * Sidebar, showing grouped links for the currently active module.
- * Collapses automatically when the active module has no sub-nav groups.
- *
- * Industrial standard ref: VS Code Explorer panel, GitHub Docs sidebar,
- * Notion workspace left pane.
+ * Appears as a secondary left panel, displaying grouped links for the selected
+ * horizontal ModuleNav tab (Level 2). Automatically handles layout shifts.
  */
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
-import { SUB_NAV } from '../../data/subNavConfig.js';
+import { ChevronDown, ChevronRight, ArrowLeft } from 'lucide-react';
+import { NAVIGATION } from '../../data/subNavConfig.js';
 import { useRoute } from '../../hooks/useRoute.js';
 
-function SubNavGroup({ group, activeUrl, onNavigate }) {
+function SubNavGroup({ group, onNavigate }) {
   const [expanded, setExpanded] = useState(true);
 
+  // Check if any of the items in this group matches the current URL path
   const hasActive = group.items.some((item) =>
     window.location.pathname.startsWith(item.url.split('?')[0])
   );
@@ -32,10 +29,7 @@ function SubNavGroup({ group, activeUrl, onNavigate }) {
         >
           <span className="ax-subnav-group-title">{group.title}</span>
           <span className="ax-subnav-group-chevron">
-            {expanded
-              ? <ChevronDown size={13} />
-              : <ChevronRight size={13} />
-            }
+            {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           </span>
         </button>
       )}
@@ -53,6 +47,7 @@ function SubNavGroup({ group, activeUrl, onNavigate }) {
                   onClick={(e) => {
                     e.preventDefault();
                     onNavigate(item.url);
+                    document.body.classList.remove('ax-mobile-sidebar-open');
                   }}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -69,9 +64,14 @@ function SubNavGroup({ group, activeUrl, onNavigate }) {
 }
 
 export default function SubNav() {
-  const { activeModule, navigate } = useRoute();
-  const config = SUB_NAV[activeModule];
-  const hasSubNav = !!(config && config.groups && config.groups.length > 0);
+  const { activeModule, activeTab, navigate } = useRoute();
+
+  const moduleData = NAVIGATION[activeModule];
+  const activeTabConfig = moduleData?.tabs?.find((t) => t.id === activeTab);
+  const label = activeTabConfig?.label || '';
+  const groups = activeTabConfig?.groups || [];
+
+  const hasSubNav = groups.length > 0;
 
   useEffect(() => {
     document.body.classList.toggle('ax-has-subnav', hasSubNav);
@@ -80,25 +80,31 @@ export default function SubNav() {
     };
   }, [hasSubNav]);
 
-  // Don't render if no config or no groups defined
+  // Don't render if no sub-navigation links exist
   if (!hasSubNav) {
     return null;
   }
 
   return (
-    <aside className="ax-subnav" id="ax-subnav" aria-label={`${config.label} navigation`}>
-      {/* Module label header */}
+    <aside className="ax-subnav" id="ax-subnav" aria-label={`${label} navigation`}>
+      {/* Module tab label header */}
       <div className="ax-subnav-header">
-        <span className="ax-subnav-module-label">{config.label}</span>
+        <button 
+          className="ax-subnav-back-btn"
+          onClick={() => document.body.classList.add('ax-mobile-subnav-hidden')}
+          title="Back to Modules"
+        >
+          <ArrowLeft size={16} />
+        </button>
+        <span className="ax-subnav-module-label">{label}</span>
       </div>
 
       {/* Scrollable group list */}
       <div className="ax-subnav-body">
-        {config.groups.map((group, idx) => (
+        {groups.map((group, idx) => (
           <SubNavGroup
             key={group.title || idx}
             group={group}
-            activeUrl={window.location.pathname}
             onNavigate={navigate}
           />
         ))}

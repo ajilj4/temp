@@ -11,7 +11,8 @@
   height: 100vh;
   background: #FFFFFF;
   border-right: 1px solid var(--ax-border);
-  z-index: 1005; /* Sits behind primary sidebar (z-index 1010) */
+  z-index: 1005;
+  /* Sits behind primary sidebar (z-index 1010) */
   transition: left var(--ax-transition), width var(--ax-transition);
   display: flex;
   flex-direction: column;
@@ -60,13 +61,16 @@ body.ax-sidebar-collapsed .ax-subnav {
 .ax-subnav-body::-webkit-scrollbar {
   width: 4px;
 }
+
 .ax-subnav-body::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .ax-subnav-body::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.08);
   border-radius: 4px;
 }
+
 .ax-subnav-body::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.15);
 }
@@ -160,4 +164,69 @@ body.ax-sidebar-collapsed .ax-subnav {
 
 .ax-subnav-item:hover .ax-subnav-item-dot {
   background: var(--ax-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE SUBNAV (TABLET & MOBILE)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Tablet Overrides (< 1024px) ─────────────────────────────────── */
+@media (max-width: 1024px) {
+  .ax-subnav {
+    left: var(--ax-sidebar-collapsed) !important;
+  }
+
+  .ax-subnav-back-btn {
+    display: none !important;
+    visibility: hidden !important;
+    /* Hide back button on tablet/desktop */
+    border: none !important;
+  }
+}
+
+/* ── Mobile Overrides (< 768px) ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .ax-subnav {
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important;
+    /* Hide offscreen by default on mobile */
+    width: var(--ax-sidebar-width) !important;
+    /* Take same width as mobile drawer */
+    height: 100vh !important;
+    z-index: 1011 !important;
+    /* Sit slightly above primary sidebar (1010) */
+    transition: left 250ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* When mobile menu is open, show the active SubNav by default */
+  body.ax-mobile-sidebar-open.ax-has-subnav .ax-subnav {
+    left: 0 !important;
+  }
+
+  /* If the user clicked "Back to Modules" in the subnav, hide the subnav */
+  body.ax-mobile-sidebar-open.ax-has-subnav.ax-mobile-subnav-hidden .ax-subnav {
+    left: -100% !important;
+  }
+
+  /* Style the mobile back button */
+  .ax-subnav-back-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--ax-text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    margin-right: 8px;
+    border-radius: var(--ax-radius-md);
+    transition: background var(--ax-transition), color var(--ax-transition);
+  }
+
+  .ax-subnav-back-btn:hover {
+    background: #F3F4F6;
+    color: var(--ax-text-primary);
+  }
 }

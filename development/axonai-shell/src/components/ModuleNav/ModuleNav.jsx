@@ -1,50 +1,46 @@
 /**
  * ModuleNav.jsx
- * AxonAI One — Horizontal module tab bar
+ * AxonAI One — Horizontal Module Tab Bar (Level 2 Navigation)
  *
- * Sits directly below the TopHeader, showing the primary ERPNext modules
- * as horizontal pill/tab links.  Clicking a tab routes via Frappe router
- * and highlights the active tab synced with the current URL.
- *
- * Industrial standard ref: SAP Fiori launchpad tabs, Salesforce NavBar tabs.
+ * Renders the horizontal tabs directly below the TopHeader based on the selected
+ * primary sidebar module (Level 1). Synchronizes with activeTab.
  */
 
 import React from 'react';
-import { MENU } from '../../data/menuConfig.js';
+import { NAVIGATION } from '../../data/subNavConfig.js';
 import { useRoute } from '../../hooks/useRoute.js';
 
-// Only show module-level items in the tab bar (not tools/copilot/etc.)
-const MODULE_TABS = MENU.filter(
-  (item) => !['copilot', 'automation', 'reports', 'files', 'calendar', 'calls'].includes(item.id)
-);
-
 export default function ModuleNav() {
-  const { activeModule, navigate } = useRoute();
+  const { activeModule, activeTab, navigate } = useRoute();
 
-  const handleClick = (e, item) => {
+  const moduleData = NAVIGATION[activeModule];
+  const tabs = moduleData?.tabs || [];
+
+  const handleClick = (e, tab) => {
     e.preventDefault();
-    navigate(item.url);
+    navigate(tab.url);
   };
+
+  // If no horizontal tabs exist for the active module, don't render anything
+  if (tabs.length === 0) {
+    return null;
+  }
 
   return (
     <nav className="ax-module-nav" aria-label="Module navigation">
       <div className="ax-module-nav-inner">
-        {MODULE_TABS.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeModule === item.id;
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
           return (
             <a
-              key={item.id}
-              href={item.url}
+              key={tab.id}
+              href={tab.url}
               className={`ax-module-tab${isActive ? ' ax-module-tab--active' : ''}`}
-              onClick={(e) => handleClick(e, item)}
+              onClick={(e) => handleClick(e, tab)}
               aria-current={isActive ? 'page' : undefined}
-              title={item.label}
+              title={tab.label}
             >
-              <span className="ax-module-tab-icon">
-                <Icon size={15} />
-              </span>
-              <span className="ax-module-tab-label">{item.label}</span>
+              <span className="ax-module-tab-label">{tab.label}</span>
               {isActive && <span className="ax-module-tab-indicator" />}
             </a>
           );

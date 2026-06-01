@@ -265,3 +265,66 @@
   color: var(--ax-text-secondary);
   font-size: 14px;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE TOPBAR (TABLET & MOBILE)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Style the mobile toggle button on desktop (hidden by default) */
+.ax-mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .ax-mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--ax-text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--ax-radius-md);
+    transition: background var(--ax-transition), color var(--ax-transition);
+  }
+
+  .ax-mobile-menu-btn:hover {
+    background: #F3F4F6;
+    color: var(--ax-text-primary);
+  }
+
+  .ax-topbar {
+    padding: 0 16px !important; /* Reduce padding on smaller screens */
+  }
+
+  .ax-topbar-brand {
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Search input scales down or collapses on mobile */
+  .ax-topbar-search-container {
+    flex: 1 1 auto !important;
+    margin: 0 8px !important;
+    max-width: 180px !important;
+  }
+
+  .ax-search-placeholder {
+    font-size: 12px !important;
+    margin-left: 4px !important;
+  }
+
+  .ax-search-shortcut {
+    display: none !important; /* Hide shortcut keyboard indicator on mobile */
+  }
+
+  .ax-profile-name {
+    display: none !important; /* Hide full user name in top bar on phone */
+  }
+
+  .ax-topbar-actions {
+    gap: 8px !important;
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import GlobalSearch from './GlobalSearch.jsx';
 
 export default function TopHeader() {
@@ -18,9 +18,18 @@ export default function TopHeader() {
 
   return (
     <header className="ax-topbar">
-      {/* Left: Organization / Brand */}
-      <div className="ax-topbar-brand">
-        {company}
+      {/* Left: Hamburger + Organization / Brand */}
+      <div className="ax-topbar-left" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button 
+          className="ax-mobile-menu-btn" 
+          onClick={() => document.body.classList.toggle('ax-mobile-sidebar-open')}
+          title="Toggle Menu"
+        >
+          <Menu size={20} />
+        </button>
+        <div className="ax-topbar-brand">
+          {company}
+        </div>
       </div>
 
       {/* Center: Search */}
